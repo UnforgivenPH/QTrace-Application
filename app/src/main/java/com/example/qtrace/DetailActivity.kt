@@ -6,6 +6,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.qtrace.models.Project
 import java.text.SimpleDateFormat
 import java.util.Locale
 

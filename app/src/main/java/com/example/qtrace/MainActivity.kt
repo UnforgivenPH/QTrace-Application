@@ -8,7 +8,7 @@ import com.example.qtrace.fragments.HomeFragment
 import com.example.qtrace.fragments.ProjectsFragment
 import com.example.qtrace.fragments.ReportsFragment
 import com.example.qtrace.fragments.ContractorsFragment
-// import com.example.qtrace.fragments.NewsFragment (Create this later)
+import com.example.qtrace.fragments.NewsFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_contractors -> loadFragment(ContractorsFragment())
 
                 R.id.nav_reports -> loadFragment(ReportsFragment())
-                // R.id.nav_news -> loadFragment(NewsFragment()) // Ensure NewsFragment exists
+                R.id.nav_news -> loadFragment(NewsFragment()) // Ensure NewsFragment exists
                 else -> false
             }
             true

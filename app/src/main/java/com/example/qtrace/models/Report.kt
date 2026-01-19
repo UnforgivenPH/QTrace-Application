@@ -1,5 +1,6 @@
 package com.example.qtrace.models
 
+import java.io.Serializable
 import java.util.Date
 
 data class Report(
@@ -9,6 +10,9 @@ data class Report(
     val category: String = "",
     val description: String = "",
     val status: String = "Pending",
-    // Use Date? = null to handle cases where timestamp might be missing
-    val dateSubmitted: Date? = null
-)
+    val dateSubmitted: Date? = null,
+
+    // ✅ ADD THESE TWO LINES TO FIX THE MODEL ERRORS
+    val projectId: String = "",
+    val projectName: String = ""
+) : Serializable

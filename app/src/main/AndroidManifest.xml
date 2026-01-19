@@ -24,8 +24,10 @@
     </activity>
 
     <activity android:name=".DetailActivity" />
-
+    <activity android:name=".NewsDetailActivity" />
     <activity android:name=".ReportFormActivity" />
+    <activity android:name=".ContractorDetailActivity" />
+    <activity android:name=".ReportDetailActivity" />
 
 </application>
 </manifest>

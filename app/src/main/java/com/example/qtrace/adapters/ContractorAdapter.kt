@@ -1,5 +1,6 @@
 package com.example.qtrace.adapters
 
+import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,11 +34,19 @@ class ContractorAdapter(private val list: List<Contractor>) :
         holder.phoneTv.text = "Tel: ${item.phone}"
         holder.addressTv.text = item.address
 
-        // Join the expertise array into a single string
-        if (item.expertise.isNotEmpty()) {
-            holder.specTv.text = "Expertise: ${item.expertise.joinToString(", ")}"
+        // Handle Expertise List
+        val expertiseString = if (item.expertise.isNotEmpty()) {
+            item.expertise.joinToString(", ")
         } else {
-            holder.specTv.text = "General Services"
+            "General Services"
+        }
+        holder.specTv.text = "Expertise: $expertiseString"
+
+        // ✅ CLICK LISTENER: Show Full Details in Dialog
+        holder.itemView.setOnClickListener {
+            val intent = android.content.Intent(holder.itemView.context, com.example.qtrace.ContractorDetailActivity::class.java)
+            intent.putExtra("CONTRACTOR_DATA", item)
+            holder.itemView.context.startActivity(intent)
         }
     }
 

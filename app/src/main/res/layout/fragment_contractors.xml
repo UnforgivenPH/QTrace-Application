@@ -5,10 +5,18 @@
     android:background="#F5F5F5">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_contractors"
+        android:id="@+id/recycler_view_contractors"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp"
-        android:clipToPadding="false"/>
+        android:padding="8dp"/>
+
+    <TextView
+        android:id="@+id/tv_empty_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Loading..."
+        android:textSize="16sp"
+        android:visibility="gone"/>
 
 </FrameLayout>

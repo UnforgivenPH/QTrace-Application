@@ -7,7 +7,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.example.qtrace.fragments.HomeFragment
 import com.example.qtrace.fragments.ProjectsFragment
 import com.example.qtrace.fragments.ReportsFragment
-// import com.example.qtrace.fragments.NewsFragment (Create this later)
+import com.example.qtrace.fragments.ContractorsFragment
+import com.example.qtrace.fragments.NewsFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,8 +25,12 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_home -> loadFragment(HomeFragment())
                 R.id.nav_projects -> loadFragment(ProjectsFragment())
+
+                // Add this new case
+                R.id.nav_contractors -> loadFragment(ContractorsFragment())
+
                 R.id.nav_reports -> loadFragment(ReportsFragment())
-                // R.id.nav_news -> loadFragment(NewsFragment())
+                R.id.nav_news -> loadFragment(NewsFragment()) // Ensure NewsFragment exists
                 else -> false
             }
             true

@@ -20,5 +20,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             val intent = Intent(requireContext(), ReportFormActivity::class.java)
             startActivity(intent)
         }
+
     }
 }

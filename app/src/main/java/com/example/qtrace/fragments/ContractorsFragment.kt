@@ -1,14 +1,17 @@
 package com.example.qtrace.fragments
 
+import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.qtrace.ContractorDetailActivity
 import com.example.qtrace.R
 import com.example.qtrace.adapters.ContractorAdapter
 import com.example.qtrace.models.Contractor
@@ -16,64 +19,55 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class ContractorsFragment : Fragment() {
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var emptyStateText: TextView
-    private lateinit var adapter: ContractorAdapter
-    private val contractorList = ArrayList<Contractor>()
+    private lateinit var recycler: RecyclerView
     private val db = FirebaseFirestore.getInstance()
+    private var allContractors = listOf<Contractor>() // Store full list here
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_contractors, container, false)
-
-        recyclerView = view.findViewById(R.id.recycler_view_contractors)
-        emptyStateText = view.findViewById(R.id.tv_empty_state)
-
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = ContractorAdapter(contractorList)
-        recyclerView.adapter = adapter
-
-        fetchContractors()
-
-        return view
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_contractors, container, false)
     }
 
-    private fun fetchContractors() {
-        db.collection("contractors")
-            .get()
-            .addOnSuccessListener { result ->
-                // Check if fragment is still active before updating UI
-                if (!isAdded) return@addOnSuccessListener
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-                contractorList.clear()
-                for (document in result) {
-                    try {
-                        val contractor = document.toObject(Contractor::class.java)
-                        contractor.id = document.id
-                        contractorList.add(contractor)
-                    } catch (e: Exception) {
-                        e.printStackTrace() // Log error but DON'T CRASH
-                    }
-                }
+        recycler = view.findViewById(R.id.recyclerContractors)
+        recycler.layoutManager = LinearLayoutManager(requireContext())
 
-                adapter.notifyDataSetChanged()
+        // 1. Load Data
+        loadData()
 
-                // Toggle Empty State
-                if (contractorList.isEmpty()) {
-                    recyclerView.visibility = View.GONE
-                    emptyStateText.visibility = View.VISIBLE
-                    emptyStateText.text = "No contractors found."
-                } else {
-                    recyclerView.visibility = View.VISIBLE
-                    emptyStateText.visibility = View.GONE
-                }
+        // 2. Setup Search Listener
+        val searchBox = view.findViewById<EditText>(R.id.etSearchContractor)
+        searchBox.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                filterList(s.toString())
             }
-            .addOnFailureListener { exception ->
-                if (isAdded) {
-                    Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
-                }
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+    }
+
+    private fun loadData() {
+        db.collection("contractors").get().addOnSuccessListener { result ->
+            allContractors = result.toObjects(Contractor::class.java)
+            renderList(allContractors)
+        }
+    }
+
+    private fun filterList(query: String) {
+        val filtered = allContractors.filter {
+            it.name.contains(query, ignoreCase = true) ||
+                    (it.expertise?.any { exp -> exp.contains(query, ignoreCase = true) } == true)
+        }
+        renderList(filtered)
+    }
+
+    private fun renderList(list: List<Contractor>) {
+        val adapter = ContractorAdapter(list) { contractor ->
+            val intent = Intent(requireContext(), ContractorDetailActivity::class.java)
+            intent.putExtra("CONTRACTOR_DATA", contractor)
+            startActivity(intent)
+        }
+        recycler.adapter = adapter
     }
 }

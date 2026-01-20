@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
-    android:layout_marginBottom="12dp"
+    android:layout_marginBottom="16dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="2dp"
+    app:cardElevation="4dp"
     app:cardBackgroundColor="#FFFFFF">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,11 +23,10 @@
             android:gravity="center_vertical">
 
             <ImageView
-                android:id="@+id/imgContractorLogo"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/ic_launcher_foreground"
-                android:background="@drawable/bg_search_box"
+                android:background="#1A2E44"
                 android:padding="8dp"/>
 
             <LinearLayout
@@ -37,19 +37,19 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvContractorName"
+                    android:id="@+id/tvProjectTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Contractor Name"
+                    android:text="Project Title"
+                    android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="#1A2E44"
-                    android:textSize="16sp"/>
+                    android:textColor="#1A2E44"/>
 
                 <TextView
-                    android:id="@+id/tvContractorExpertise"
+                    android:id="@+id/tvLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="General Engineering"
+                    android:text="Location"
                     android:textSize="12sp"
                     android:textColor="#6C757D"/>
             </LinearLayout>
@@ -66,63 +66,58 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#F0FFF4"
+                android:background="#F0F7FF"
                 android:padding="8dp"
                 android:gravity="center">
-
                 <TextView
-                    android:id="@+id/tvActiveCount"
+                    android:id="@+id/tvBudget"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
+                    android:text="₱0.00"
                     android:textStyle="bold"
-                    android:textColor="#198754"/>
+                    android:textColor="#0D6EFD"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Active Projects"
+                    android:text="Budget"
                     android:textSize="10sp"
-                    android:textColor="#198754"/>
+                    android:textColor="#0D6EFD"/>
             </LinearLayout>
 
-            <View android:layout_width="8dp" android:layout_height="match_parent"/>
+            <View android:layout_width="12dp" android:layout_height="match_parent"/>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#F0F7FF"
+                android:background="#F0FFF4"
                 android:padding="8dp"
                 android:gravity="center">
-
                 <TextView
-                    android:id="@+id/tvCompletedCount"
+                    android:id="@+id/tvDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
+                    android:text="Ongoing"
                     android:textStyle="bold"
-                    android:textColor="#0D6EFD"/>
+                    android:textColor="#198754"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Completed"
+                    android:text="Status"
                     android:textSize="10sp"
-                    android:textColor="#0D6EFD"/>
+                    android:textColor="#198754"/>
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/btnViewProfile"
+        <Button
+            android:id="@+id/btnViewDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="View Full Profile"
-            android:gravity="center"
-            android:padding="12dp"
-            android:textColor="#1A2E44"
-            android:textStyle="bold"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/bg_search_box"/>
+            android:text="View Project Details"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#1A2E44"
+            android:textColor="#FFFFFF"/>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

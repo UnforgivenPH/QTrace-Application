@@ -57,7 +57,7 @@ class MapFragment : Fragment() {
         val spinCat = view.findViewById<Spinner>(R.id.spinnerCategory)
 
         // Simple Adapters for Filters
-        val statuses = arrayOf("All Statuses", "Ongoing", "Finished", "Delayed")
+        val statuses = arrayOf("All Status", "Ongoing", "Finished", "Delayed")
         val categories = arrayOf("All Categories", "Infrastructure", "Building", "Utilities")
 
         spinStatus.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, statuses)

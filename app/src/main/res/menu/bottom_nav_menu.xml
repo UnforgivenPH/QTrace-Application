@@ -3,27 +3,27 @@
 
     <item
         android:id="@+id/nav_home"
-        android:icon="@android:drawable/ic_menu_compass"
+        android:icon="@drawable/ic_nav_home"
         android:title="Home" />
 
     <item
         android:id="@+id/nav_projects"
-        android:icon="@android:drawable/ic_dialog_map"
+        android:icon="@drawable/ic_nav_projects"
         android:title="Projects" />
 
     <item
         android:id="@+id/nav_contractors"
-        android:icon="@android:drawable/ic_menu_my_calendar"
+        android:icon="@drawable/ic_nav_contractors"
         android:title="Contractors" />
 
     <item
-        android:id="@+id/nav_reports"
-        android:icon="@android:drawable/ic_menu_send"
-        android:title="Reports" />
+        android:id="@+id/nav_map"
+        android:icon="@drawable/ic_nav_map"
+        android:title="Map" />
 
     <item
         android:id="@+id/nav_news"
-        android:icon="@android:drawable/ic_menu_info_details"
+        android:icon="@drawable/ic_nav_news"
         android:title="News" />
 
 </menu>

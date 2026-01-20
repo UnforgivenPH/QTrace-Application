@@ -1,5 +1,6 @@
 package com.example.qtrace.models
 
+import com.google.firebase.firestore.PropertyName
 import java.io.Serializable
 
 data class Contractor(
@@ -9,18 +10,18 @@ data class Contractor(
     val phone: String = "",
     val address: String = "",
     val email: String = "",
-
-    // 1. Matches DB field "experience" (String "5")
     val experience: String = "",
-
-    // 2. Matches DB field "expertise" (List ["Plumbing", "Carpenter"])
-    // Removed @PropertyName because the variable name matches the DB field exactly now
     val expertise: List<String> = emptyList(),
-
-    // 3. Nested Logo Object
     val logo: LogoData = LogoData(),
+    val documents: List<String> = emptyList(),
 
-    val documents: List<String> = emptyList()
+    // 🛠️ FIX: Map DB 'active_projects' to Variable 'activeProjects'
+    @get:PropertyName("active_projects") @set:PropertyName("active_projects")
+    var activeProjects: Int = 0,
+
+    // 🛠️ FIX: Map DB 'completed_projects' to Variable 'completedProjects'
+    @get:PropertyName("completed_projects") @set:PropertyName("completed_projects")
+    var completedProjects: Int = 0
 ) : Serializable
 
 data class LogoData(

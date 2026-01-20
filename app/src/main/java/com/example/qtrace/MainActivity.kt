@@ -3,12 +3,12 @@ package com.example.qtrace
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.example.qtrace.fragments.HomeFragment
-import com.example.qtrace.fragments.ProjectsFragment
-import com.example.qtrace.fragments.ReportsFragment
 import com.example.qtrace.fragments.ContractorsFragment
+import com.example.qtrace.fragments.HomeFragment // Fallback if needed
+import com.example.qtrace.fragments.MapFragment
 import com.example.qtrace.fragments.NewsFragment
+import com.example.qtrace.fragments.ProjectFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,30 +16,30 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
-        // Load Default Fragment
-        loadFragment(HomeFragment())
+        // Default Load (Projects)
+        if (savedInstanceState == null) {
+            loadFragment(HomeFragment())
+        }
 
         bottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_home -> loadFragment(HomeFragment())
-                R.id.nav_projects -> loadFragment(ProjectsFragment())
-
-                // Add this new case
-                R.id.nav_contractors -> loadFragment(ContractorsFragment())
-
-                R.id.nav_reports -> loadFragment(ReportsFragment())
-                R.id.nav_news -> loadFragment(NewsFragment()) // Ensure NewsFragment exists
-                else -> false
+            val fragment: Fragment = when (item.itemId) {
+                R.id.nav_home -> HomeFragment()
+                R.id.nav_projects -> ProjectFragment()
+                R.id.nav_map -> MapFragment()
+                R.id.nav_contractors -> ContractorsFragment()
+                R.id.nav_news -> NewsFragment()
+                else -> HomeFragment()
             }
+            loadFragment(fragment)
             true
         }
     }
 
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
+            .replace(R.id.frameLayout, fragment)
             .commit()
     }
 }

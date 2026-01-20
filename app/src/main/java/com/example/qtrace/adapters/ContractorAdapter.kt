@@ -1,23 +1,27 @@
 package com.example.qtrace.adapters
 
-import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.qtrace.R
 import com.example.qtrace.models.Contractor
 
-class ContractorAdapter(private val list: List<Contractor>) :
-    RecyclerView.Adapter<ContractorAdapter.ViewHolder>() {
+class ContractorAdapter(
+    private val contractors: List<Contractor>,
+    private val onItemClick: (Contractor) -> Unit
+) : RecyclerView.Adapter<ContractorAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val nameTv: TextView = view.findViewById(R.id.tv_contractor_name)
-        val specTv: TextView = view.findViewById(R.id.tv_specialization)
-        val personTv: TextView = view.findViewById(R.id.tv_contact_person)
-        val phoneTv: TextView = view.findViewById(R.id.tv_phone)
-        val addressTv: TextView = view.findViewById(R.id.tv_address)
+        val logo: ImageView = view.findViewById(R.id.imgContractorLogo)
+        val name: TextView = view.findViewById(R.id.tvContractorName)
+        val expertise: TextView = view.findViewById(R.id.tvContractorExpertise)
+        val activeCount: TextView = view.findViewById(R.id.tvActiveCount)
+        val completedCount: TextView = view.findViewById(R.id.tvCompletedCount)
+        val btnProfile: TextView = view.findViewById(R.id.btnViewProfile)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,28 +31,27 @@ class ContractorAdapter(private val list: List<Contractor>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = list[position]
+        val contractor = contractors[position]
 
-        holder.nameTv.text = item.name
-        holder.personTv.text = "Contact: ${item.contactPerson}"
-        holder.phoneTv.text = "Tel: ${item.phone}"
-        holder.addressTv.text = item.address
+        holder.name.text = contractor.name
+        holder.expertise.text = contractor.expertise.joinToString(", ")
 
-        // Handle Expertise List
-        val expertiseString = if (item.expertise.isNotEmpty()) {
-            item.expertise.joinToString(", ")
-        } else {
-            "General Services"
+        // Fix 1: These references now exist in the model
+        holder.activeCount.text = contractor.activeProjects.toString()
+        holder.completedCount.text = contractor.completedProjects.toString()
+
+        // Fix 2: Handle the LogoData object correctly
+        // We check if the 'path' inside the logo object is not empty
+        if (contractor.logo.path.isNotEmpty()) {
+            Glide.with(holder.itemView.context)
+                .load(contractor.logo.path) // Load the path string
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .into(holder.logo)
         }
-        holder.specTv.text = "Expertise: $expertiseString"
 
-        // ✅ CLICK LISTENER: Show Full Details in Dialog
-        holder.itemView.setOnClickListener {
-            val intent = android.content.Intent(holder.itemView.context, com.example.qtrace.ContractorDetailActivity::class.java)
-            intent.putExtra("CONTRACTOR_DATA", item)
-            holder.itemView.context.startActivity(intent)
-        }
+        holder.itemView.setOnClickListener { onItemClick(contractor) }
+        holder.btnProfile.setOnClickListener { onItemClick(contractor) }
     }
 
-    override fun getItemCount() = list.size
+    override fun getItemCount() = contractors.size
 }

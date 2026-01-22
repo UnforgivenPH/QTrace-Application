@@ -35,8 +35,10 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/bg_search_box"
             android:hint="Search projects..."
+            android:textColorHint="@color/black"
             android:paddingHorizontal="12dp"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            android:textColor="@color/black"/>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

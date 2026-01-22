@@ -1,5 +1,6 @@
 package com.example.qtrace.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,12 +20,11 @@ class ProjectAdapter(
         val title: TextView = view.findViewById(R.id.tvProjectTitle)
         val location: TextView = view.findViewById(R.id.tvLocation)
         val budget: TextView = view.findViewById(R.id.tvBudget)
-        val date: TextView = view.findViewById(R.id.tvDate)
+        val status: TextView = view.findViewById(R.id.tvDate) // Using this for Status pill
         val btnView: View = view.findViewById(R.id.btnViewDetails)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        // Uses the item_project.xml we created earlier
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_project, parent, false)
         return ViewHolder(view)
@@ -34,16 +34,43 @@ class ProjectAdapter(
         val project = projects[position]
 
         holder.title.text = project.title
-        holder.location.text = "${project.address.street}, ${project.address.city}"
+
+        // Safety check for empty address
+        val street = if(project.address.street.isNotEmpty()) project.address.street else "No Street"
+        val city = if(project.address.city.isNotEmpty()) project.address.city else "Quezon City"
+        holder.location.text = "$street, $city"
 
         // Format Budget
-        val format = NumberFormat.getCurrencyInstance(Locale("en", "PH"))
-        holder.budget.text = format.format(project.budget)
+        try {
+            val format = NumberFormat.getCurrencyInstance(Locale("en", "PH"))
+            holder.budget.text = format.format(project.budget)
+        } catch (e: Exception) {
+            holder.budget.text = "₱${project.budget}"
+        }
 
-        // Simple Date
-        holder.date.text = "Ongoing" // You can parse dates here if needed
+        // --- STATUS COLOR LOGIC ---
+        holder.status.text = project.status ?: "Ongoing"
 
-        // Click Listeners
+        // Reset background to avoid recycling issues
+        holder.status.setBackgroundResource(0)
+
+        if (project.status == "Finished") {
+            // Dark Green Text, Light Green Background
+            holder.status.setTextColor(Color.parseColor("#198754"))
+            holder.status.setBackgroundColor(Color.parseColor("#D1E7DD"))
+        } else if (project.status == "Delayed") {
+            // Red Text, Light Red Background
+            holder.status.setTextColor(Color.parseColor("#DC3545"))
+            holder.status.setBackgroundColor(Color.parseColor("#F8D7DA"))
+        } else {
+            // Blue Text, Light Blue Background (Default for Ongoing)
+            holder.status.setTextColor(Color.parseColor("#0D6EFD"))
+            holder.status.setBackgroundColor(Color.parseColor("#CFE2FF"))
+        }
+
+        // Add padding since we added a background color
+        holder.status.setPadding(16, 8, 16, 8)
+
         holder.itemView.setOnClickListener { onItemClick(project) }
         holder.btnView.setOnClickListener { onItemClick(project) }
     }

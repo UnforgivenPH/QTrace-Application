@@ -16,7 +16,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="News &amp; Updates"
+            android:text="Explore Projects"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold"/>
@@ -24,31 +24,45 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Latest announcements from Quezon City Hall."
+            android:text="View active projects near you."
             android:textColor="#B0BEC5"
             android:textSize="12sp"
             android:layout_marginTop="4dp"/>
 
         <EditText
-            android:id="@+id/etSearchNews"
+            android:id="@+id/etSearch"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/bg_search_box"
-            android:hint="Search news..."
+            android:hint="Search projects..."
             android:textColorHint="@color/black"
+            android:iconTint="@color/black"
             android:paddingHorizontal="12dp"
             android:textSize="14sp"
             android:inputType="text"
             android:maxLines="1"
+            android:drawableStart="@android:drawable/ic_menu_search"
+            android:drawablePadding="8dp"
             android:textColor="@color/black"/>
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerNews"
+    <org.osmdroid.views.MapView
+        android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="16dp"
-        android:clipToPadding="false"/>
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DDDDDD"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerProjects"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#FFFFFF"/>
 
 </LinearLayout>

@@ -18,73 +18,118 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class ContractorDetailActivity : AppCompatActivity() {
 
-    private lateinit var recycler: RecyclerView
+    private lateinit var recyclerActive: RecyclerView
+    private lateinit var recyclerCompleted: RecyclerView
     private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_contractor_detail)
 
-        // 1. Get Data
+        // 1. Get Data from Intent
         val contractor = intent.getSerializableExtra("CONTRACTOR_DATA") as? Contractor
         if (contractor == null) {
-            Toast.makeText(this, "Error loading data", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Error: Data missing", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
 
-        // 2. Bind Data to Your Layout Views
-        findViewById<TextView>(R.id.tv_detail_contractor_name).text = contractor.name
+        // 2. 🛠️ TOP NAV: Setup Custom Header Back Button
+        // We preserved the 'btnBack' ID in the updated XML
+        findViewById<View>(R.id.btnBack).setOnClickListener {
+            finish()
+        }
 
-        // Formatting lists nicely
-        val expertiseText = contractor.expertise?.joinToString("\n• ", prefix = "• ") ?: "General"
-        findViewById<TextView>(R.id.tv_detail_contractor_expertise).text = expertiseText
+        // 3. UI BINDING: Basic Info
+        findViewById<TextView>(R.id.tv_detail_contractor_name).text = contractor.name
+        findViewById<TextView>(R.id.tv_detail_contractor_expertise).text =
+            contractor.expertise?.joinToString(", ") ?: "General Engineering"
 
         findViewById<TextView>(R.id.tv_detail_contractor_contact).text =
-            "Person: ${contractor.contactPerson}\nPhone: ${contractor.phone}"
+            "Person: ${contractor.contactPerson ?: "N/A"}\nPhone: ${contractor.phone ?: "N/A"}"
 
-        findViewById<TextView>(R.id.tv_detail_contractor_email).text = "Email: ${contractor.email}"
-        findViewById<TextView>(R.id.tv_detail_contractor_address).text = contractor.address
+        findViewById<TextView>(R.id.tv_detail_contractor_email).text = "Email: ${contractor.email ?: "N/A"}"
+        findViewById<TextView>(R.id.tv_detail_contractor_address).text = "Address: ${contractor.address ?: "N/A"}"
 
-        // Load Logo
         val imgLogo = findViewById<ImageView>(R.id.img_contractor_logo)
-        if (contractor.logo.path.isNotEmpty()) {
+        if (contractor.logo != null && contractor.logo.path.isNotEmpty()) {
             Glide.with(this)
                 .load(contractor.logo.path)
-                .placeholder(android.R.drawable.ic_menu_my_calendar)
+                .placeholder(R.color.image_placeholder)
                 .into(imgLogo)
         }
 
-        // 3. Setup Project List
-        recycler = findViewById(R.id.recyclerContractorProjects)
-        recycler.layoutManager = LinearLayoutManager(this)
+        // 4. Setup RecyclerViews
+        recyclerActive = findViewById(R.id.recyclerActiveProjects)
+        recyclerActive.layoutManager = LinearLayoutManager(this)
 
-        // Load the projects
-        loadContractorProjects(contractor.name)
+        recyclerCompleted = findViewById(R.id.recyclerCompletedProjects)
+        recyclerCompleted.layoutManager = LinearLayoutManager(this)
+
+        // 5. Load and Filter Projects
+        loadAllProjectsAndFilter(contractor)
     }
 
-    private fun loadContractorProjects(contractorName: String) {
-        // NOTE: Ensure your Firestore 'projects' collection has a field 'contractor' matching this name
-        db.collection("projects")
-            .whereEqualTo("contractor", contractorName)
-            .get()
-            .addOnSuccessListener { result ->
-                val projects = result.toObjects(Project::class.java)
+    private fun loadAllProjectsAndFilter(contractor: Contractor) {
+        db.collection("projects").addSnapshotListener { snapshots, e ->
+            if (e != null) {
+                Log.e("ContractorDetail", "Firestore Error", e)
+                return@addSnapshotListener
+            }
 
-                if (projects.isEmpty()) {
-                    findViewById<TextView>(R.id.tvNoProjects).visibility = View.VISIBLE
-                } else {
-                    findViewById<TextView>(R.id.tvNoProjects).visibility = View.GONE
-                    val adapter = ProjectAdapter(projects) { project ->
-                        val intent = Intent(this, DetailActivity::class.java)
-                        intent.putExtra("PROJECT_DATA", project)
-                        startActivity(intent)
+            if (snapshots != null) {
+                val allProjects = snapshots.toObjects(Project::class.java)
+                val contractorsProjects = ArrayList<Project>()
+
+                for (project in allProjects) {
+                    // Match by ID OR Name (Matches ContractorsFragment logic)
+                    val isIdMatch = project.contractorId == contractor.id
+                    val isNameMatch = project.contractor.trim().equals(contractor.name.trim(), ignoreCase = true)
+
+                    if (isIdMatch || isNameMatch) {
+                        contractorsProjects.add(project)
                     }
-                    recycler.adapter = adapter
                 }
+                updateUI(contractorsProjects)
             }
-            .addOnFailureListener {
-                Log.e("ContractorDetail", "Error loading projects", it)
-            }
+        }
+    }
+
+    private fun updateUI(myProjects: List<Project>) {
+        // Filter logic: Anything NOT "Finished" is Active
+        val active = myProjects.filter { !it.status.equals("Finished", ignoreCase = true) }
+        val completed = myProjects.filter { it.status.equals("Finished", ignoreCase = true) }
+
+        // Update Counts (Preserved IDs)
+        findViewById<TextView>(R.id.tv_active_project_count).text = "(${active.size})"
+        findViewById<TextView>(R.id.tv_completed_project_count).text = "(${completed.size})"
+
+        // 🛠️ ACTIVE LIST TOGGLE
+        val tvNoActive = findViewById<TextView>(R.id.tvNoActiveProjects)
+        if (active.isEmpty()) {
+            tvNoActive.visibility = View.VISIBLE
+            recyclerActive.visibility = View.GONE
+        } else {
+            tvNoActive.visibility = View.GONE
+            recyclerActive.visibility = View.VISIBLE
+            recyclerActive.adapter = ProjectAdapter(active) { openProject(it) }
+        }
+
+        // 🛠️ COMPLETED LIST TOGGLE
+        val tvNoCompleted = findViewById<TextView>(R.id.tvNoCompletedProjects)
+        if (completed.isEmpty()) {
+            tvNoCompleted.visibility = View.VISIBLE
+            recyclerCompleted.visibility = View.GONE
+        } else {
+            tvNoCompleted.visibility = View.GONE
+            recyclerCompleted.visibility = View.VISIBLE
+            recyclerCompleted.adapter = ProjectAdapter(completed) { openProject(it) }
+        }
+    }
+
+    private fun openProject(project: Project) {
+        val intent = Intent(this, DetailActivity::class.java)
+        intent.putExtra("PROJECT_DATA", project)
+        startActivity(intent)
     }
 }

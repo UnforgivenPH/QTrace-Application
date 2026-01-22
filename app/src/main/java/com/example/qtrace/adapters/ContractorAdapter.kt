@@ -33,22 +33,31 @@ class ContractorAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val contractor = contractors[position]
 
+        // 1. Set Text Data
         holder.name.text = contractor.name
-        holder.expertise.text = contractor.expertise.joinToString(", ")
 
-        // Fix 1: These references now exist in the model
+        // Handle expertise list safely (avoids crash if list is null)
+        holder.expertise.text = contractor.expertise?.joinToString(", ") ?: "General"
+
+        // Set the counters directly from the database model
         holder.activeCount.text = contractor.activeProjects.toString()
         holder.completedCount.text = contractor.completedProjects.toString()
 
-        // Fix 2: Handle the LogoData object correctly
-        // We check if the 'path' inside the logo object is not empty
-        if (contractor.logo.path.isNotEmpty()) {
+        // 2. Load Logo with Safety Check
+        // We ensure 'logo' isn't null and the path is valid before trying to load
+        if (contractor.logo != null && contractor.logo.path.isNotEmpty()) {
             Glide.with(holder.itemView.context)
-                .load(contractor.logo.path) // Load the path string
-                .placeholder(R.drawable.ic_launcher_foreground)
+                .load(contractor.logo.path)
+                .placeholder(R.drawable.ic_launcher_foreground) // Shows this while loading
+                .error(R.drawable.ic_launcher_foreground)       // Shows this if URL is broken
                 .into(holder.logo)
+        } else {
+            // Explicitly set placeholder if no logo exists (handles recycling views correctly)
+            holder.logo.setImageResource(R.drawable.ic_launcher_foreground)
         }
 
+        // 3. Click Listeners
+        // Clicking the whole card OR the "View Profile" button does the same thing
         holder.itemView.setOnClickListener { onItemClick(contractor) }
         holder.btnProfile.setOnClickListener { onItemClick(contractor) }
     }

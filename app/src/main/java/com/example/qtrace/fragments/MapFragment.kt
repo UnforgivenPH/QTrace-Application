@@ -1,17 +1,21 @@
 package com.example.qtrace.fragments
 
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qtrace.R
-import com.example.qtrace.adapters.MapProjectAdapter // You'll create this adapter similar to others
+import com.example.qtrace.adapters.ProjectAdapter
 import com.example.qtrace.models.Project
 import com.google.firebase.firestore.FirebaseFirestore
 import org.osmdroid.config.Configuration
@@ -40,7 +44,7 @@ class MapFragment : Fragment() {
         map.setTileSource(TileSourceFactory.MAPNIK)
         map.setMultiTouchControls(true)
         map.controller.setZoom(13.0)
-        map.controller.setCenter(GeoPoint(14.6760, 121.0437)) // QC Center
+        map.controller.setCenter(GeoPoint(14.6760, 121.0437))
 
         // 2. Filter Setup
         setupFilters(view)
@@ -56,7 +60,6 @@ class MapFragment : Fragment() {
         val spinStatus = view.findViewById<Spinner>(R.id.spinnerStatus)
         val spinCat = view.findViewById<Spinner>(R.id.spinnerCategory)
 
-        // Simple Adapters for Filters
         val statuses = arrayOf("All Status", "Ongoing", "Finished", "Delayed")
         val categories = arrayOf("All Categories", "Infrastructure", "Building", "Utilities")
 
@@ -68,45 +71,55 @@ class MapFragment : Fragment() {
             spinCat.setSelection(0)
             renderMap(allProjects)
         }
-
-        // Note: You should add onItemSelectedListeners here to filter 'allProjects'
     }
 
     private fun loadData() {
-        db.collection("projects").get().addOnSuccessListener { result ->
-            allProjects = result.toObjects(Project::class.java)
-            renderMap(allProjects)
+        // Real-time updates so status changes reflect immediately
+        db.collection("projects").addSnapshotListener { value, error ->
+            if (error != null) {
+                Log.e("MapFragment", "Error loading map data", error)
+                return@addSnapshotListener
+            }
+            if (value != null) {
+                allProjects = value.toObjects(Project::class.java)
+                renderMap(allProjects)
+            }
         }
     }
 
     private fun renderMap(projects: List<Project>) {
         map.overlays.clear()
 
-        // Update Bottom List
-        val adapter = MapProjectAdapter(projects) { project ->
-            // On Card Click -> Zoom to Map
-            if(project.location != null) {
-                map.controller.animateTo(GeoPoint(project.location!!.lat, project.location!!.lng))
-                map.controller.setZoom(16.0)
+        // Reuse ProjectAdapter
+        val adapter = ProjectAdapter(projects) { project ->
+            if(project.location.lat != 0.0) {
+                map.controller.animateTo(GeoPoint(project.location.lat, project.location.lng))
+                map.controller.setZoom(18.0)
             }
         }
         recycler.adapter = adapter
 
         // Add Markers
         for (p in projects) {
-            if (p.location != null && p.location!!.lat != 0.0) {
+            if (p.location.lat != 0.0 && p.location.lng != 0.0) {
                 val marker = Marker(map)
-                marker.position = GeoPoint(p.location!!.lat, p.location!!.lng)
-                marker.title = p.title
+                marker.position = GeoPoint(p.location.lat, p.location.lng)
+                marker.title = "${p.title}\n(${p.status})"
 
-                // Set Icon Color based on status (requires custom drawables, default is blue)
-                // marker.icon = resources.getDrawable(...)
-
-                marker.setOnMarkerClickListener { m, _ ->
-                    m.showInfoWindow()
-                    // Optional: Scroll bottom list to this project
-                    return@setOnMarkerClickListener true
+                // --- MARKER COLOR LOGIC ---
+                val icon = ContextCompat.getDrawable(requireContext(), org.osmdroid.library.R.drawable.marker_default)
+                if (icon != null) {
+                    val coloredIcon = icon.mutate()
+                    if (p.status == "Finished") {
+                        coloredIcon.setColorFilter(Color.parseColor("#2E7D32"), PorterDuff.Mode.SRC_IN)
+                    } else if (p.status == "Delayed") {
+                        coloredIcon.setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN)
+                    } else {
+                        coloredIcon.setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_IN)
+                    }
+                    marker.icon = coloredIcon
                 }
+
                 map.overlays.add(marker)
             }
         }

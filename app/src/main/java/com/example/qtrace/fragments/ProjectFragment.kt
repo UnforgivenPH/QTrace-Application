@@ -2,6 +2,7 @@ package com.example.qtrace.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qtrace.DetailActivity
 import com.example.qtrace.R
-import com.example.qtrace.adapters.ProjectAdapter // Your standard vertical list adapter
+import com.example.qtrace.adapters.ProjectAdapter
 import com.example.qtrace.models.Project
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -22,7 +23,6 @@ class ProjectFragment : Fragment() {
     private var allProjects = listOf<Project>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Ensure this layout is the CLEAN list version (no map view inside)
         return inflater.inflate(R.layout.fragment_projects, container, false)
     }
 
@@ -32,9 +32,9 @@ class ProjectFragment : Fragment() {
         recycler = view.findViewById(R.id.recyclerProjects)
         recycler.layoutManager = LinearLayoutManager(requireContext())
 
+        // Load projects immediately with real-time listening
         loadProjects()
 
-        // Simple Search Logic (Optional)
         view.findViewById<EditText>(R.id.etSearchProject).setOnEditorActionListener { v, _, _ ->
             filterList(v.text.toString())
             true
@@ -42,15 +42,21 @@ class ProjectFragment : Fragment() {
     }
 
     private fun loadProjects() {
-        db.collection("projects").get().addOnSuccessListener { result ->
-            allProjects = result.toObjects(Project::class.java)
-            renderList(allProjects)
+        db.collection("projects").addSnapshotListener { snapshots, e ->
+            if (e != null) {
+                Log.w("ProjectFragment", "Listen failed.", e)
+                return@addSnapshotListener
+            }
+
+            if (snapshots != null) {
+                allProjects = snapshots.toObjects(Project::class.java)
+                renderList(allProjects)
+            }
         }
     }
 
     private fun renderList(list: List<Project>) {
         val adapter = ProjectAdapter(list) { project ->
-            // Navigate to DetailActivity
             val intent = Intent(requireContext(), DetailActivity::class.java)
             intent.putExtra("PROJECT_DATA", project)
             startActivity(intent)

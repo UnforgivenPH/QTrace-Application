@@ -3,11 +3,7 @@ package com.example.qtrace
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.qtrace.fragments.ContractorsFragment
-import com.example.qtrace.fragments.HomeFragment // Fallback if needed
-import com.example.qtrace.fragments.MapFragment
-import com.example.qtrace.fragments.NewsFragment
-import com.example.qtrace.fragments.ProjectFragment
+import com.example.qtrace.fragments.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -18,22 +14,31 @@ class MainActivity : AppCompatActivity() {
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
-        // Default Load (Projects)
-        if (savedInstanceState == null) {
-            loadFragment(HomeFragment())
+        // Setup Navigation Listener
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> { loadFragment(HomeFragment()); true }
+                R.id.nav_explore -> { loadFragment(ExploreFragment()); true }
+                R.id.nav_contractors -> { loadFragment(ContractorsFragment()); true }
+                R.id.nav_news -> { loadFragment(NewsFragment()); true }
+                R.id.nav_account -> { loadFragment(AccountFragment()); true }
+                else -> false
+            }
         }
 
-        bottomNav.setOnItemSelectedListener { item ->
-            val fragment: Fragment = when (item.itemId) {
-                R.id.nav_home -> HomeFragment()
-                R.id.nav_projects -> ProjectFragment()
-                R.id.nav_map -> MapFragment()
-                R.id.nav_contractors -> ContractorsFragment()
-                R.id.nav_news -> NewsFragment()
-                else -> HomeFragment()
+        // 🛠️ KEY CHANGE: Check if we should open a specific tab (like Account)
+        if (savedInstanceState == null) {
+            val target = intent.getStringExtra("TARGET_FRAGMENT")
+
+            if (target == "ACCOUNT") {
+                // Load Account Fragment
+                loadFragment(AccountFragment())
+                // Update the bottom nav visual state
+                bottomNav.selectedItemId = R.id.nav_account
+            } else {
+                // Default to Home
+                loadFragment(HomeFragment())
             }
-            loadFragment(fragment)
-            true
         }
     }
 

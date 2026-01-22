@@ -44,6 +44,7 @@ dependencies {
     // Firebase (BOM ensures compatible versions)
     implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
 
     // Map: osmdroid (The Native "Leaflet")

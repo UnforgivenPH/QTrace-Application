@@ -19,24 +19,29 @@ class NewsDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // 🛠️ Ensure this matches your file name: activity_news_detail.xml
         setContentView(R.layout.activity_news_detail)
 
-        // 1. Get the News object passed from the adapter
         val news = intent.getSerializableExtra("NEWS_DATA") as? News
 
         if (news == null) {
-            finish() // Close if no data found
+            finish()
             return
         }
 
-        // 2. Bind Views
+        // 🛠️ TOP NAV: Link the custom back button ID from your XML
+        findViewById<View>(R.id.btnBackNews).setOnClickListener {
+            finish()
+        }
+
+        // Bind Views
         val imgBanner: ImageView = findViewById(R.id.img_detail_banner)
         val tvTitle: TextView = findViewById(R.id.tv_detail_title)
         val tvDate: TextView = findViewById(R.id.tv_detail_date)
         val tvContent: TextView = findViewById(R.id.tv_detail_content)
         val btnLink: Button = findViewById(R.id.btn_detail_project_link)
 
-        // 3. Set Data
+        // Set Data
         tvTitle.text = news.title
         tvContent.text = news.content
 
@@ -45,13 +50,16 @@ class NewsDetailActivity : AppCompatActivity() {
         tvDate.text = "Posted on $dateString • ${news.author}"
 
         if (news.imageUrl.isNotEmpty()) {
-            Glide.with(this).load(news.imageUrl).into(imgBanner)
+            Glide.with(this)
+                .load(news.imageUrl)
+                .placeholder(R.color.image_placeholder) // Use your color scheme
+                .centerCrop()
+                .into(imgBanner)
         }
 
-        // 4. Handle "View Related Project" Button Logic
+        // Handle "View Related Project" Button
         if (news.projectId.isNotEmpty()) {
             btnLink.visibility = View.VISIBLE
-
             btnLink.setOnClickListener {
                 fetchAndOpenProject(news.projectId)
             }
@@ -62,26 +70,24 @@ class NewsDetailActivity : AppCompatActivity() {
 
     private fun fetchAndOpenProject(projectId: String) {
         val db = FirebaseFirestore.getInstance()
-
-        // Show a quick loading toast
         Toast.makeText(this, "Loading Project...", Toast.LENGTH_SHORT).show()
 
         db.collection("projects").document(projectId).get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
                     val project = document.toObject(Project::class.java)
+                    // Ensure the ID is set for further actions in DetailActivity
                     project?.id = document.id
 
-                    // Navigate to the Project Detail Screen
                     val intent = Intent(this, DetailActivity::class.java)
                     intent.putExtra("PROJECT_DATA", project)
                     startActivity(intent)
                 } else {
-                    Toast.makeText(this, "Project not found in database", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Project no longer available", Toast.LENGTH_SHORT).show()
                 }
             }
             .addOnFailureListener {
-                Toast.makeText(this, "Error loading project data", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Network error. Please try again.", Toast.LENGTH_SHORT).show()
             }
     }
 }

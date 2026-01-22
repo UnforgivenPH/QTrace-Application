@@ -1,12 +1,20 @@
 package com.example.qtrace.models
 
+import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.PropertyName
 import java.io.Serializable
 
 data class Contractor(
+    @DocumentId
     var id: String = "",
+
     val name: String = "",
-    val contactPerson: String = "",
+
+    // 🛠️ FIX: Changed 'val' to 'var' so @set: works
+    @get:PropertyName("contact_person")
+    @set:PropertyName("contact_person")
+    var contactPerson: String = "",
+
     val phone: String = "",
     val address: String = "",
     val email: String = "",
@@ -15,12 +23,13 @@ data class Contractor(
     val logo: LogoData = LogoData(),
     val documents: List<String> = emptyList(),
 
-    // 🛠️ FIX: Map DB 'active_projects' to Variable 'activeProjects'
-    @get:PropertyName("active_projects") @set:PropertyName("active_projects")
+    // These are already 'var', so they are fine
+    @get:PropertyName("active_projects")
+    @set:PropertyName("active_projects")
     var activeProjects: Int = 0,
 
-    // 🛠️ FIX: Map DB 'completed_projects' to Variable 'completedProjects'
-    @get:PropertyName("completed_projects") @set:PropertyName("completed_projects")
+    @get:PropertyName("completed_projects")
+    @set:PropertyName("completed_projects")
     var completedProjects: Int = 0
 ) : Serializable
 

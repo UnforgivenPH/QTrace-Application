@@ -7,4 +7,19 @@
         <item>Safety (Lighting, Crime)</item>
         <item>Others</item>
     </string-array>
+
+    <string-array name="project_status_options">
+        <item>All</item>
+        <item>Active</item>
+        <item>Completed</item>
+        <item>On Hold</item>
+    </string-array>
+
+    <string-array name="project_category_options">
+        <item>All</item>
+        <item>Roadwork</item>
+        <item>Construction</item>
+        <item>Maintenance</item>
+    </string-array>
+
 </resources>

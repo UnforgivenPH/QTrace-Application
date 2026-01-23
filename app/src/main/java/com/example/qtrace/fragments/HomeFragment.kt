@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -51,8 +52,7 @@ class HomeFragment : Fragment() {
         // 2. Link the Report Button
         val reportBtn = view.findViewById<Button>(R.id.btn_report_issue)
         reportBtn.setOnClickListener {
-            val intent = Intent(requireContext(), ReportFormActivity::class.java)
-            startActivity(intent)
+            Toast.makeText(requireContext(), "Report feature coming soon", Toast.LENGTH_SHORT).show()
         }
 
         // 3. Load Data

@@ -216,7 +216,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
-                android:background="@color/white" />
+                android:background="@null" />
 
             <TextView
                 android:id="@+id/tvNoActiveProjects"
@@ -242,7 +242,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
-                android:background="@color/white" />
+                android:background="@null" />
 
             <TextView
                 android:id="@+id/tvNoCompletedProjects"

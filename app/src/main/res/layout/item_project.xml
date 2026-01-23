@@ -59,16 +59,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:clipToPadding="false"
+            android:clipChildren="false"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:background="#F0F7FF"
-                android:padding="8dp"
+                android:background="@drawable/card_background_rounded"
+                android:elevation="4dp"
+                android:layout_margin="4dp"
+                android:padding="12dp"
                 android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Budget"
+                    android:textSize="10sp"
+                    android:textColor="@color/black"/>
+
                 <TextView
                     android:id="@+id/tvBudget"
                     android:layout_width="wrap_content"
@@ -76,36 +89,33 @@
                     android:text="₱0.00"
                     android:textStyle="bold"
                     android:textColor="#0D6EFD"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/statusContainer"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@drawable/card_background_rounded"
+                android:elevation="4dp"
+                android:layout_margin="4dp"
+                android:padding="12dp"
+                android:gravity="center">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Budget"
+                    android:text="Status"
                     android:textSize="10sp"
-                    android:textColor="#0D6EFD"/>
-            </LinearLayout>
+                    android:textColor="@color/black"/>
 
-            <View android:layout_width="12dp" android:layout_height="match_parent"/>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="#F0FFF4"
-                android:padding="8dp"
-                android:gravity="center">
                 <TextView
                     android:id="@+id/tvDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ongoing"
                     android:textStyle="bold"
-                    android:textColor="#198754"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Status"
-                    android:textSize="10sp"
                     android:textColor="#198754"/>
             </LinearLayout>
         </LinearLayout>

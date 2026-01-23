@@ -2,7 +2,7 @@
     <string name="app_name">QTrace</string>
 
     <string-array name="issue_categories">
-        <item>Infrastructure (Potholes, Roads)</item>
+        <item>Select a Category</item> <item>Infrastructure (Potholes, Roads)</item>
         <item>Sanitation (Garbage, Clogging)</item>
         <item>Safety (Lighting, Crime)</item>
         <item>Others</item>

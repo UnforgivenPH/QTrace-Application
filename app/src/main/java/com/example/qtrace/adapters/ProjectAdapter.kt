@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qtrace.R
@@ -57,15 +58,15 @@ class ProjectAdapter(
         if (project.status == "Finished") {
             // Dark Green Text, Light Green Background
             holder.status.setTextColor(Color.parseColor("#198754"))
-            holder.status.setBackgroundColor(Color.parseColor("#D1E7DD"))
+
         } else if (project.status == "Delayed") {
             // Red Text, Light Red Background
             holder.status.setTextColor(Color.parseColor("#DC3545"))
-            holder.status.setBackgroundColor(Color.parseColor("#F8D7DA"))
+
         } else {
             // Blue Text, Light Blue Background (Default for Ongoing)
             holder.status.setTextColor(Color.parseColor("#0D6EFD"))
-            holder.status.setBackgroundColor(Color.parseColor("#CFE2FF"))
+
         }
 
         // Add padding since we added a background color

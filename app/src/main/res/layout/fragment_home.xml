@@ -80,7 +80,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingHorizontal="16dp"
-            android:layout_marginTop="-30dp">
+            android:layout_marginTop="-30dp"
+            >
 
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
@@ -88,7 +89,11 @@
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="#FFFFFF"
+                android:background="@null"
+                app:cardPreventCornerOverlap="false"
+                app:cardUseCompatPadding="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -121,7 +126,12 @@
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="#FFFFFF"
+                android:background="@null"
+                app:cardPreventCornerOverlap="false"
+                app:cardUseCompatPadding="true">
+
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -28,10 +28,19 @@ class ReportFormActivity : AppCompatActivity() {
         val title = findViewById<EditText>(R.id.et_title).text.toString()
         val location = findViewById<EditText>(R.id.et_location).text.toString()
         val description = findViewById<EditText>(R.id.et_description).text.toString()
-        val category = findViewById<Spinner>(R.id.sp_category).selectedItem.toString()
+        // Get the selected item and its position
+        val categorySpinner = findViewById<Spinner>(R.id.sp_category)
+        val category = categorySpinner.selectedItem.toString()
+        val categoryPosition = categorySpinner.selectedItemPosition
 
         if (title.isEmpty() || location.isEmpty()) {
             Toast.makeText(this, "Please fill required fields", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Check if the user left it on "Select a Category" (Position 0)
+        if (categoryPosition == 0) {
+            Toast.makeText(this, "Please select a valid category", Toast.LENGTH_SHORT).show()
             return
         }
 

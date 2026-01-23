@@ -51,7 +51,7 @@
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"/>
 
     <View
         android:layout_width="match_parent"
@@ -59,6 +59,7 @@
         android:background="#DDDDDD"/>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:paddingTop="10dp"
         android:id="@+id/recyclerProjects"
         android:layout_width="match_parent"
         android:layout_height="0dp"

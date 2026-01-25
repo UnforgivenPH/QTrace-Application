@@ -51,11 +51,15 @@ class NewsDetailActivity : AppCompatActivity() {
         tvDate.text = "Posted on $dateString • ${news.author}"
 
         if (news.imageUrl.isNotEmpty()) {
+            imgBanner.visibility = View.VISIBLE
             Glide.with(this)
                 .load(news.imageUrl)
-                .placeholder(R.color.image_placeholder) // Use your color scheme
+                .placeholder(R.color.image_placeholder)
                 .centerCrop()
                 .into(imgBanner)
+        } else {
+            // Hide the view so the text moves to the top
+            imgBanner.visibility = View.GONE
         }
 
         // Handle "View Related Project" Button

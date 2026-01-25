@@ -112,7 +112,7 @@ class DetailActivity : AppCompatActivity() {
         val format = NumberFormat.getCurrencyInstance(Locale("en", "PH"))
         budget.text = format.format(project.budget)
 
-        val sdf = SimpleDateFormat("MMM DD yyyy", Locale.getDefault())
+        val sdf = SimpleDateFormat("MMM yyyy", Locale.getDefault())
         val start = if (project.dates.started != null) sdf.format(project.dates.started) else "?"
         val end = if (project.dates.end != null) sdf.format(project.dates.end) else "?"
         timeline.text = "$start - $end"

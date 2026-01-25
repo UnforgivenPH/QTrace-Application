@@ -115,26 +115,28 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@color/status_active_bg"
+                    android:background="@drawable/card_background_rounded"
                     android:padding="12dp"
                     android:gravity="center"
                     android:layout_marginEnd="6dp">
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Active Projects"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_secondary" />
+
+                    <TextView
                         android:id="@+id/tv_active_project_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="(0)"
+                        android:text="0"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:textColor="@color/status_active_text" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Active"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -142,26 +144,28 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@color/status_completed_bg"
+                    android:background="@drawable/card_background_rounded"
                     android:padding="12dp"
                     android:gravity="center"
                     android:layout_marginStart="6dp">
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Completed Projects"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_secondary" />
+
+                    <TextView
                         android:id="@+id/tv_completed_project_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="(0)"
+                        android:text="0"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:textColor="@color/status_completed_text" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Completed"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary" />
+
                 </LinearLayout>
             </LinearLayout>
 

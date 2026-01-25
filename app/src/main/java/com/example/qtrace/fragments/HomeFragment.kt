@@ -72,15 +72,15 @@ class HomeFragment : Fragment() {
                     if (doc.exists()) {
                         val first = doc.getString("fullName.first") ?: "User"
                         val last = doc.getString("fullName.last") ?: ""
-                        tvUserName.text = "Hello, $first $last"
+                        tvUserName.text = "$first $last"
                     }
                 }
                 .addOnFailureListener {
-                    tvUserName.text = "Hello, User"
+                    tvUserName.text = "User"
                 }
         } else {
             // User is NOT logged in -> Guest Mode
-            tvUserName.text = "Hello, Guest User"
+            tvUserName.text = "Guest User"
         }
     }
 

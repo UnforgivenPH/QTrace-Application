@@ -7,12 +7,7 @@ import java.io.Serializable
 data class Contractor(
     @DocumentId
     var id: String = "",
-
     val name: String = "",
-
-    // 🛠️ FIX: Changed 'val' to 'var' so @set: works
-    @get:PropertyName("contact_person")
-    @set:PropertyName("contact_person")
     var contactPerson: String = "",
 
     val phone: String = "",

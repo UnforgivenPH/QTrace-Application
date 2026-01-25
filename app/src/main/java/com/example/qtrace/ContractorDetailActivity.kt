@@ -46,7 +46,8 @@ class ContractorDetailActivity : AppCompatActivity() {
             contractor.expertise?.joinToString(", ") ?: "General Engineering"
 
         findViewById<TextView>(R.id.tv_detail_contractor_contact).text =
-            "Person: ${contractor.contactPerson ?: "N/A"}\nPhone: ${contractor.phone ?: "N/A"}"
+            "Person: ${contractor.contactPerson?.takeIf { it.isNotBlank() } ?: "N/A"}\n" +
+                    "Phone: ${contractor.phone?.takeIf { it.isNotBlank() } ?: "N/A"}"
 
         findViewById<TextView>(R.id.tv_detail_contractor_email).text = "Email: ${contractor.email ?: "N/A"}"
         findViewById<TextView>(R.id.tv_detail_contractor_address).text = "Address: ${contractor.address ?: "N/A"}"
@@ -101,8 +102,8 @@ class ContractorDetailActivity : AppCompatActivity() {
         val completed = myProjects.filter { it.status.equals("Finished", ignoreCase = true) }
 
         // Update Counts (Preserved IDs)
-        findViewById<TextView>(R.id.tv_active_project_count).text = "(${active.size})"
-        findViewById<TextView>(R.id.tv_completed_project_count).text = "(${completed.size})"
+        findViewById<TextView>(R.id.tv_active_project_count).text = "${active.size}"
+        findViewById<TextView>(R.id.tv_completed_project_count).text = "${completed.size}"
 
         // 🛠️ ACTIVE LIST TOGGLE
         val tvNoActive = findViewById<TextView>(R.id.tvNoActiveProjects)

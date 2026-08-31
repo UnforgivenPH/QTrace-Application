@@ -69,3 +69,23 @@ Citizens open app → Explore project map → Track real-time status → Submit 
 ---
 
 ## 🗺️ App Navigation Architecture
+📱 QTrace Mobile Application
+│
+├─ 🔐 Authentication Screen
+│  └─ Secure QC ID & Password Login
+│
+├─ 👨‍💼 Admin Workspace
+│  ├─ 📊 Analytics & KPI Dashboard
+│  ├─ 🏗️ Project Management (CRUD)
+│  ├─ 👷 Contractor Management
+│  ├─ 📰 Articles & News Management
+│  ├─ 💬 Community Reports Moderation
+│  ├─ 👥 Account & Role Settings
+│  └─ 📜 Audit Trail Logs
+│
+└─ 🌐 Public Application Experience
+├─ 🏠 Home Feed & Featured Projects
+├─ 🏗️ Projects Explorer & Maps
+├─ 📰 City Updates & Articles
+├─ 👷 Approved Contractors
+└─ 💬 Report Issue Submission Form
